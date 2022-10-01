@@ -23,7 +23,7 @@ endfunction
 
 function! asyncomplete#sources#buffer#get_source_options(opts)
     return extend({
-        \ 'events': ['VimEnter', 'BufWinEnter', 'TextChangedI', 'InsertLeave'],
+        \ 'events': ['BufWinEnter', 'TextChangedI', 'InsertLeave'],
         \ 'on_event': function('s:on_event'),
         \}, a:opts)
 endfunction

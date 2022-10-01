@@ -23,7 +23,7 @@ endfunction
 
 function! asyncomplete#sources#buffer#get_source_options(opts)
     return extend({
-        \ 'events': ['BufWinEnter', 'TextChangedI', 'InsertLeave'],
+        \ 'events': ['VimEnter', 'BufWinEnter', 'TextChangedI', 'InsertLeave'],
         \ 'on_event': function('s:on_event'),
         \}, a:opts)
 endfunction
@@ -47,9 +47,8 @@ endfunction
 function! s:on_event(opt, ctx, event) abort
     if s:should_ignore(a:opt) | return | endif
 
-    if a:event ==# 'BufWinEnter'
-        call s:refresh_keywords()
-    elseif a:event ==# 'TextChangedI'
+    call s:refresh_keywords()
+    if a:event ==# 'TextChangedI'
         let l:typed = a:ctx['typed']
         if empty(l:typed) " may be a new line, so add the prev line
             call s:add_line(getline(a:ctx['lnum'] - 1))

@@ -37,3 +37,4 @@ All the credit goes to the following projects
 * [https://github.com/roxma/nvim-complete-manager](https://github.com/roxma/nvim-complete-manager)
 
 ### Include last word into completion
+### Buffer completion only in current buffer

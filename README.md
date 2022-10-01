@@ -35,3 +35,5 @@ let g:asyncomplete_buffer_clear_cache = 1
 ### Credits
 All the credit goes to the following projects
 * [https://github.com/roxma/nvim-complete-manager](https://github.com/roxma/nvim-complete-manager)
+
+### Include last word into completion

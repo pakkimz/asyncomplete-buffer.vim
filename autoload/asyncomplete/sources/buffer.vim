@@ -1,11 +1,8 @@
 let s:words = {}
-let s:last_word = ''
 let g:asyncomplete_buffer_clear_cache = get(g:, 'asyncomplete_buffer_clear_cache', 1)
 
 function! asyncomplete#sources#buffer#completor(opt, ctx)
     let l:typed = a:ctx['typed']
-
-    call s:refresh_keyword_incremental(l:typed)
 
     if empty(s:words)
         return
@@ -26,7 +23,7 @@ endfunction
 
 function! asyncomplete#sources#buffer#get_source_options(opts)
     return extend({
-        \ 'events': ['BufWinEnter'],
+        \ 'events': ['BufWinEnter', 'TextChangedI', 'InsertLeave'],
         \ 'on_event': function('s:on_event'),
         \}, a:opts)
 endfunction
@@ -47,12 +44,18 @@ function! s:should_ignore(opt) abort
     return 0
 endfunction
 
-let s:last_ctx = {}
 function! s:on_event(opt, ctx, event) abort
     if s:should_ignore(a:opt) | return | endif
 
-    if a:event == 'BufWinEnter'
+    if a:event ==# 'BufWinEnter'
         call s:refresh_keywords()
+    elseif a:event ==# 'TextChangedI'
+        let l:typed = a:ctx['typed']
+        if empty(l:typed) " may be a new line, so add the prev line
+            call s:add_line(getline(a:ctx['lnum'] - 1))
+        elseif match(l:typed, '\W$') > -1 " ends with a non-word char, add the typed text
+            call s:add_line(l:typed)
+        endif
     endif
 endfunction
 
